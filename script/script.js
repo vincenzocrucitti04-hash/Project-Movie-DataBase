@@ -158,3 +158,97 @@ async function loadMovies() {
       "<p>Errore nel caricamento dei film.</p>";
   }
 }
+
+// ========================================
+// FUNZIONI DI INTERAZIONE UTENTE
+// ========================================
+
+/**
+ * Funzione chiamata quando l'utente clicca "Cerca"
+ * Legge il testo inserito e avvia una nuova ricerca
+ */
+function searchMovies() {
+  // Legge il valore dal campo di input
+  currentQuery = document.getElementById("searchInput").value;
+
+  // Reset: torna alla prima pagina per la nuova ricerca
+  currentPage = 1;
+
+  // Ricarica i film con i nuovi parametri
+  loadMovies();
+}
+
+/**
+ * Funzione chiamata quando l'utente cambia il genere nel menu a tendina
+ */
+function filterByGenre() {
+  // Legge il genere selezionato (sarà l'ID del genere, o "" se "Tutti i generi")
+  currentGenre = document.getElementById("genreSelect").value;
+
+  // Cancella la ricerca testuale (se c'era)
+  currentQuery = "";
+
+  // Reset: torna alla prima pagina
+  currentPage = 1;
+
+  // Ricarica i film con il nuovo filtro
+  loadMovies();
+}
+
+// ========================================
+// FUNZIONI DI PAGINAZIONE
+// ========================================
+
+/**
+ * Va alla pagina successiva (se esiste)
+ */
+function nextPage() {
+  // Controlla se possiamo andare avanti
+  if (currentPage < totalPages) {
+    currentPage++; // Incrementa il numero di pagina
+    loadMovies(); // Ricarica i film della nuova pagina
+  }
+}
+
+/**
+ * Va alla pagina precedente (se non siamo già alla prima)
+ */
+function prevPage() {
+  // Controlla se possiamo andare indietro
+  if (currentPage > 1) {
+    currentPage--; // Decrementa il numero di pagina
+    loadMovies(); // Ricarica i film della nuova pagina
+  }
+}
+
+// ========================================
+// INIZIALIZZAZIONE DELL'APPLICAZIONE
+// ========================================
+
+/**
+ * Questo codice viene eseguito quando la pagina HTML è completamente caricata
+ * È il punto di partenza dell'intera applicazione
+ */
+document.addEventListener("DOMContentLoaded", () => {
+  // 1. Carica i generi per popolare il menu a tendina
+  loadGenres();
+
+  // 2. Carica i film popolari iniziali
+  //    Dato che currentQuery e currentGenre sono vuoti,
+  //    loadMovies() userà l'endpoint /discover/movie che restituisce i film popolari
+  loadMovies();
+});
+
+// ========================================
+// FLUSSO DELL'APPLICAZIONE:
+// ========================================
+// 1. La pagina HTML si carica
+// 2. Il browser esegue questo script
+// 3. Definisce tutte le funzioni e variabili
+// 4. Quando HTML è pronto, esegue DOMContentLoaded:
+//    - Chiama loadGenres() → popola il menu generi
+//    - Chiama loadMovies() → mostra i film popolari
+// 5. L'utente può interagire:
+//    - Cerca → searchMovies() → loadMovies() con ricerca
+//    - Filtra → filterByGenre() → loadMovies() con genere
+//    - Naviga → nextPage()/prevPage() → loadMovies() con pagina diversa

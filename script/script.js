@@ -73,3 +73,36 @@ async function loadGenres() {
     console.error("Errore nel caricamento dei generi:", error);
   }
 }
+
+// ========================================
+// FUNZIONE PRINCIPALE: CARICAMENTO FILM
+// ========================================
+
+/**
+ * Funzione principale che carica e mostra i film in base allo stato corrente
+ * Questa funzione decide quale endpoint chiamare in base a:
+ * - Se c'è una ricerca attiva (currentQuery)
+ * - Se c'è un genere selezionato (currentGenre)
+ * - Oppure mostra semplicemente i film popolari
+ */
+async function loadMovies() {
+  try {
+    let endpoint = "";
+
+    // LOGICA DI DECISIONE: Quale endpoint dell'API chiamare?
+
+    if (currentQuery) {
+      // L'utente ha inserito una ricerca
+      // Cerca film per titolo con il testo inserito
+      endpoint = `/search/movie?query=${encodeURIComponent(
+        currentQuery
+      )}&page=${currentPage}&language=it`;
+    } else if (currentGenre) {
+      // L'utente ha selezionato un genere specifico
+      // Trova film di quel genere
+      endpoint = `/discover/movie?with_genres=${currentGenre}&page=${currentPage}&language=it`;
+    } else {
+      // Caso DEFAULT: nessuna ricerca, nessun genere
+      // Mostra i film più popolari (questo è il caso quando si apre la pagina)
+      endpoint = `/discover/movie?page=${currentPage}&language=it`;
+    }

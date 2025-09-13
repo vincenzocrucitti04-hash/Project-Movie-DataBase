@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="it">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Movie Database</title>
+    <link rel="stylesheet" href="./css/style.css" />
+  </head>
+  <body>
+    <h1>🎬 Movie Database 🎬</h1>
+
+    <!-- Ricerca -->
+    <div class="search-controls">
+      <input
+        type="text"
+        id="searchInput"
+        placeholder="Cerca un film per titolo..."
+      />
+      <button onclick="searchMovies()">Cerca</button>
+      <select id="genreSelect" onchange="filterByGenre()">
+        <option value="">Tutti i generi</option>
+      </select>
+    </div>
+
+    <!-- Paginazione -->
+    <div class="pagination-controls">
+      <button onclick="prevPage()">⬅️ Precedente</button>
+      <span id="pageInfo"></span>
+      <button onclick="nextPage()">➡️ Successiva</button>
+    </div>
+
+    <!-- Lista film -->
+    <div id="movies"></div>
+
+    <script src="./script/script.js"></script>
+  </body>
+</html>

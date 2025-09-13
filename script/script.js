@@ -43,3 +43,33 @@ async function fetchAPI(endpoint) {
   // Converte la risposta da JSON e la restituisce
   return await res.json();
 }
+
+// ========================================
+// CARICAMENTO GENERI PER IL FILTRO
+// ========================================
+
+/**
+ * Carica tutti i generi disponibili dall'API e popola il menu a tendina
+ */
+async function loadGenres() {
+  try {
+    // Chiama l'API per ottenere la lista dei generi in italiano
+    const data = await fetchAPI("/genre/movie/list?language=it");
+
+    // Prende il riferimento al menu select nell'HTML
+    const select = document.getElementById("genreSelect");
+
+    // Per ogni genere restituito dall'API...
+    data.genres.forEach((g) => {
+      // Crea un nuovo elemento <option>
+      const opt = document.createElement("option");
+      opt.value = g.id; // Il valore è l'ID numerico del genere
+      opt.textContent = g.name; // Il testo visualizzato è il nome (es: "Azione")
+
+      // Aggiunge l'opzione al menu select
+      select.appendChild(opt);
+    });
+  } catch (error) {
+    console.error("Errore nel caricamento dei generi:", error);
+  }
+}

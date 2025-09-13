@@ -106,3 +106,55 @@ async function loadMovies() {
       // Mostra i film più popolari (questo è il caso quando si apre la pagina)
       endpoint = `/discover/movie?page=${currentPage}&language=it`;
     }
+
+    // Effettua la chiamata API con l'endpoint scelto
+    const data = await fetchAPI(endpoint);
+
+    // AGGIORNAMENTO INFORMAZIONI PAGINAZIONE
+    // Salva il numero totale di pagine restituito dall'API
+    totalPages = data.total_pages;
+
+    // Aggiorna il testo della paginazione nell'HTML (es: "1 / 500")
+    document.getElementById(
+      "pageInfo"
+    ).textContent = `${currentPage} / ${totalPages}`;
+
+    // PREPARAZIONE DEL CONTENITORE HTML
+    // Prende il div dove inserire i film
+    const container = document.getElementById("movies");
+
+    // Cancella tutto il contenuto precedente (importante per aggiornamenti)
+    container.innerHTML = "";
+
+    // CREAZIONE HTML PER OGNI FILM
+    // L'API restituisce un array di film in data.results
+    data.results.forEach((movie) => {
+      // Crea un nuovo div per questo film
+      const div = document.createElement("div");
+
+      // Aggiunge un po' di spaziatura
+      div.style.margin = "10px";
+
+      // Costruisce l'HTML interno del div
+      // Nota: usa template literals (backticks) per inserire variabili
+      div.innerHTML = `
+        <h3>${movie.title}</h3>
+        <img src="${
+          // Se il film ha un poster, costruisce l'URL completo
+          // Altrimenti lascia vuoto (l'immagine non si caricherà)
+          movie.poster_path ? IMG_BASE + movie.poster_path : ""
+        }" alt="${movie.title}">
+        <p>Data uscita: ${movie.release_date || "N/A"}</p>
+        <p>Voto: ${movie.vote_average}</p>
+      `;
+
+      // Aggiunge questo div al contenitore principale
+      container.appendChild(div);
+    });
+  } catch (error) {
+    console.error("Errore nel caricamento dei film:", error);
+    // In caso di errore, mostra un messaggio all'utente
+    document.getElementById("movies").innerHTML =
+      "<p>Errore nel caricamento dei film.</p>";
+  }
+}
